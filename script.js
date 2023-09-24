@@ -2,8 +2,7 @@
 //   fetch(`https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=indonesianews`)
 //     .then((response) => response.json())
 //     .then((results) => {
-//       const cards = document.createElement('div');
-//       cards.classList.add('col-md-4', 'mb-4');
+//       const cards = '';
 //       results.forEach((article) => {
 //         cards += `
 //             <div class="card">
@@ -14,29 +13,44 @@
 //                     <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
 //                 </div>
 //             </div>`;
-//         // results.appendChild(cards);
+//         const newsContainer = document.querySelector('#news-container');
+//         newsContainer.innerHTML = cards.articles;
 //       });
-//       document.querySelector('#news').innerHTML = cards.articles;
 //     });
 // }
-// tableData();
-//
-//
-//
-//
-//
-//
 
-// Fungsi untuk mengambil data berita dari API
-async function fetchNews() {
+// tableData();
+
+//
+//
+//
+//
+// /search
+const search = document.querySelector('.search-button');
+search.addEventListener('click', async function () {
   try {
-    const response = await fetch(`https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&i=google-news`);
-    const data = await response.json();
-    return data.articles;
-  } catch (error) {
-    console.error('Gagal mengambil data berita:', error);
-    return [];
+    const inputKeyword = document.querySelector('.input-keyword');
+    const news = await fetchNews(inputKeyword.value);
+    displayNews(news);
+  } catch (err) {
+    alert('Tidak ada data yang ditemukan');
   }
+});
+// Fungsi untuk mengambil data berita dari API
+async function fetchNews(keyword) {
+  return fetch('https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=' + keyword)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return response.json();
+    })
+    .then((response) => {
+      if (response.Response === 'False') {
+        throw new Error(response.Error);
+      }
+      return response.articles;
+    });
 }
 
 // Fungsi untuk menampilkan berita dalam bentuk kartu
@@ -49,19 +63,23 @@ async function displayNews() {
     const card = document.createElement('div');
     card.classList.add('col-md-4', 'mb-4');
 
-    card.innerHTML = `
-            <div class="card">
-                <img src="${article.urlToImage}" class="card-img-top" alt="${article.title}">
-                <div class="card-body">
-                    <h5 class="card-title">${article.title}</h5>
-                    <p class="card-text">${article.publishedAt}</p>
-                    <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
-                </div>
-            </div>
-        `;
+    card.innerHTML = showData(article);
 
     newsContainer.appendChild(card);
   });
+}
+// isi kartu
+function showData(article) {
+  return `
+  <div class="card">
+      <img src="${article.urlToImage}" class="card-img-top" alt="${article.title}">
+      <div class="card-body">
+          <h5 class="card-title">${article.title}</h5>
+          <p class="card-text">${article.publishedAt}</p>
+          <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
+      </div>
+  </div>
+`;
 }
 
 // Panggil fungsi untuk menampilkan berita
