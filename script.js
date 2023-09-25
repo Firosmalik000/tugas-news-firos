@@ -27,14 +27,14 @@
 //
 // /search
 const search = document.querySelector('.search-button');
-search.addEventListener('click', async function () {
+search.addEventListener('keyup', function (article) {
   try {
     const inputKeyword = document.querySelector('.input-keyword');
-    const news = await fetchNews(inputKeyword.value);
-    const filternews = article.filter((keyword) => {
-      return filternews;
+    const news = articles.target.value.toLowerCase();
+    const filterNews = news.filter((news) => {
+      return news.title.toLocaleLowerCase().includes(inputKeyword);
     });
-    displayNews(news);
+    displayNews(filterNews);
   } catch (err) {
     alert('Tidak ada data yang ditemukan');
   }
@@ -66,7 +66,7 @@ async function displayNews() {
     const card = document.createElement('div');
     card.classList.add('col-md-4', 'mb-4');
 
-    card.innerHTML = showData(article);
+    card.innerHTML += showData(article);
 
     newsContainer.appendChild(card);
   });
@@ -74,16 +74,35 @@ async function displayNews() {
 // isi kartu
 function showData(article) {
   return `
-  <div class="card">
-      <img src="${article.urlToImage}" class="card-img-top" alt="${article.title}">
-      <div class="card-body">
-          <h5 class="card-title">${article.title}</h5>
-          <p class="card-text">${article.publishedAt}</p>
-          <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
-      </div>
-  </div>
-`;
+    <div class="card">
+        <img src="${article.urlToImage}" class="card-img-top" alt="${article.title}">
+        <div class="card-body">
+            <h5 class="card-title">${article.title}</h5>
+            <p class="card-text">${article.publishedAt}</p>
+            <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
+        </div>
+    </div>
+  `;
 }
 
+// async function searchData(article) {
+//   const searchValue = inputKeyword.value.toLowerCase();
+//   const dataFilter = await displayNews.slice(0);
+//   searchValue.innerHTML = '';
+//   for (let i = 0; i < displayNews.length; i++) {
+//     if (dataFilter[i].title) {
+//       dataFilter.toLowerCase.innerHTML = displayNews;
+//     }
+//   }
+// }
+// const searchArticle = (showData) => {
+//   const filterNews = fetchNews.filter((displayNews) => {
+//     return inputKeyword.title.toLowerCase().includes(displayNews);
+//   });
+// };
+
+// const searchArticle = inputKeyword.value(filter) => {
+//   showData.innerHTML = displayNews
+// }
 // Panggil fungsi untuk menampilkan berita
 displayNews();
