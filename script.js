@@ -31,6 +31,9 @@ search.addEventListener('click', async function () {
   try {
     const inputKeyword = document.querySelector('.input-keyword');
     const news = await fetchNews(inputKeyword.value);
+    const filternews = article.filter((keyword) => {
+      return filternews;
+    });
     displayNews(news);
   } catch (err) {
     alert('Tidak ada data yang ditemukan');
@@ -82,8 +85,5 @@ function showData(article) {
 `;
 }
 
-const filternews = article.filter((keyword) => {
-  return displayNews;
-});
 // Panggil fungsi untuk menampilkan berita
 displayNews();
