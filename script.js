@@ -38,7 +38,7 @@ search.addEventListener('click', async function () {
 });
 // Fungsi untuk mengambil data berita dari API
 async function fetchNews(keyword) {
-  return fetch('https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=' + keyword)
+  return fetch('https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=google-news')
     .then((response) => {
       if (!response.ok) {
         throw new Error(response.statusText);
@@ -82,5 +82,8 @@ function showData(article) {
 `;
 }
 
+const filternews = article.filter((keyword) => {
+  return displayNews;
+});
 // Panggil fungsi untuk menampilkan berita
 displayNews();
