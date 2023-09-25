@@ -27,14 +27,13 @@
 //
 // /search
 const search = document.querySelector('.search-button');
-search.addEventListener('keyup', function (article) {
+const inputKeyword = document.querySelector('.input-keyword');
+let articles = [];
+search.addEventListener('click', async function () {
   try {
-    const inputKeyword = document.querySelector('.input-keyword');
-    const news = articles.target.value.toLowerCase();
-    const filterNews = news.filter((news) => {
-      return news.title.toLocaleLowerCase().includes(inputKeyword);
-    });
-    displayNews(filterNews);
+    const news = await fetchNews(inputKeyword.value);
+    articles = news.data.articles;
+    displayNews(articles);
   } catch (err) {
     alert('Tidak ada data yang ditemukan');
   }
@@ -84,6 +83,20 @@ function showData(article) {
     </div>
   `;
 }
+fetchNews();
+// event listener untuk livesearch
+inputKeyword.addEventListener('input', () => {
+  const query = inputKeyword.value.toLowerCase();
+  console.log(query);
+  query.length > 0 ? searchArticle(query) : displayNews(articles);
+});
+const searchArticle = (query) => {
+  const filterNews = articles.filter((article) => {
+    article.title.toLowerCase().includes(query);
+  });
+  console.log(filterNews);
+  displayNews(filterNews);
+};
 
 // async function searchData(article) {
 //   const searchValue = inputKeyword.value.toLowerCase();
@@ -103,6 +116,5 @@ function showData(article) {
 
 // const searchArticle = inputKeyword.value(filter) => {
 //   showData.innerHTML = displayNews
-// }
+
 // Panggil fungsi untuk menampilkan berita
-displayNews();
