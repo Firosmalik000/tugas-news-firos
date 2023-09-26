@@ -1,45 +1,17 @@
-// function tableData() {
-//   fetch(`https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=indonesianews`)
-//     .then((response) => response.json())
-//     .then((results) => {
-//       const cards = '';
-//       results.forEach((article) => {
-//         cards += `
-//             <div class="card">
-//                 <img src="${article.urlToImage}" class="card-img-top" alt="${article.title}">
-//                 <div class="card-body">
-//                     <h5 class="card-title">${article.title}</h5>
-//                     <p class="card-text">${article.description}</p>
-//                     <a href="${article.url}" target="_blank" class="btn btn-primary">Baca Selengkapnya</a>
-//                 </div>
-//             </div>`;
-//         const newsContainer = document.querySelector('#news-container');
-//         newsContainer.innerHTML = cards.articles;
-//       });
-//     });
-// }
-
-// tableData();
-
-//
-//
-//
-//
-// /search
 const search = document.querySelector('.search-button');
 const inputKeyword = document.querySelector('.input-keyword');
-let articles = [];
-search.addEventListener('click', async function () {
+let web = [];
+search.addEventListener('click', function () {
   try {
-    const news = await fetchNews(inputKeyword.value);
-    articles = news.data.articles;
-    displayNews(articles);
+    const news = inputKeyword.value;
+    web = news.data.article;
+    displayNews(web);
   } catch (err) {
     alert('Tidak ada data yang ditemukan');
   }
 });
 // Fungsi untuk mengambil data berita dari API
-async function fetchNews(keyword) {
+function fetchNews() {
   return fetch('https://newsapi.org/v2/top-headlines?country=id&apiKey=b1fcac5f23714f5ab2582ce347bbff75&s=google-news')
     .then((response) => {
       if (!response.ok) {
@@ -56,9 +28,9 @@ async function fetchNews(keyword) {
 }
 
 // Fungsi untuk menampilkan berita dalam bentuk kartu
-async function displayNews() {
+async function displayNews(query) {
   const newsContainer = document.getElementById('news-container');
-  const newsData = await fetchNews();
+  const newsData = await fetchNews(query);
 
   newsData.forEach((article) => {
     // Buat kartu berita menggunakan Bootstrap
@@ -69,8 +41,25 @@ async function displayNews() {
 
     newsContainer.appendChild(card);
   });
+  return;
 }
 // isi kartu
+
+// event listener untuk livesearch
+let query = '';
+inputKeyword.addEventListener('input', async () => {
+  query = await fetchNews(inputKeyword.value.toLowerCase());
+  console.log(query);
+  query.length > 0 ? searchArticle(query) : displayNews(web);
+});
+const searchArticle = (query) => {
+  const filterNews = query.filter((e) => {
+    return e.title.toLowerCase().includes(web);
+  });
+  console.log(filterNews);
+};
+displayNews();
+
 function showData(article) {
   return `
     <div class="card">
@@ -83,38 +72,3 @@ function showData(article) {
     </div>
   `;
 }
-fetchNews();
-// event listener untuk livesearch
-inputKeyword.addEventListener('input', () => {
-  const query = inputKeyword.value.toLowerCase();
-  console.log(query);
-  query.length > 0 ? searchArticle(query) : displayNews(articles);
-});
-const searchArticle = (query) => {
-  const filterNews = articles.filter((article) => {
-    article.title.toLowerCase().includes(query);
-  });
-  console.log(filterNews);
-  displayNews(filterNews);
-};
-
-// async function searchData(article) {
-//   const searchValue = inputKeyword.value.toLowerCase();
-//   const dataFilter = await displayNews.slice(0);
-//   searchValue.innerHTML = '';
-//   for (let i = 0; i < displayNews.length; i++) {
-//     if (dataFilter[i].title) {
-//       dataFilter.toLowerCase.innerHTML = displayNews;
-//     }
-//   }
-// }
-// const searchArticle = (showData) => {
-//   const filterNews = fetchNews.filter((displayNews) => {
-//     return inputKeyword.title.toLowerCase().includes(displayNews);
-//   });
-// };
-
-// const searchArticle = inputKeyword.value(filter) => {
-//   showData.innerHTML = displayNews
-
-// Panggil fungsi untuk menampilkan berita
